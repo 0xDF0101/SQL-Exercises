@@ -1,3 +1,4 @@
+use nhn_academy_100;
 INSERT INTO products (id, category, created_at, ean, price, rating, title, vendor) VALUES (1,'Gizmo','2017-07-19 19:44:56.582',1018947080336,29.463261130679875,4.6,'Rustic Paper Wallet','Swaniawski, Casper and Hilll');
 INSERT INTO products (id, category, created_at, ean, price, rating, title, vendor) VALUES (2,'Doohickey','2019-04-11 08:49:35.932',7663515285824,70.07989613071763,0.0,'Small Marble Shoes','Balistreri-Ankunding');
 INSERT INTO products (id, category, created_at, ean, price, rating, title, vendor) VALUES (3,'Doohickey','2018-09-08 22:03:20.239',4966277046676,35.388744881539054,4.0,'Synergistic Granite Chair','Murray, Watsica and Wunsch');

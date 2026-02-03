@@ -12,121 +12,159 @@
 **문제 1:** `products` 테이블에서 모든 상품의 이름(`title`)과 가격(`price`) 컬럼을 조회하세요.
 
 ```sql
-
+select title, price from products;
 ```
 
 **문제 2:** `products` 테이블에서 상품 카테고리(`category`) 목록을 중복 없이 조회하세요.
 
 ```sql
-
+select distinct category from products;
 ```
 
 **문제 3:** `products` 테이블에서 가격(`price`)이 50달러 이상인 상품의 이름(`title`)과 가격(`price`)을 조회하세요.
 
 ```sql
-
+select title, price
+from products
+where price >= 50;
 ```
 
 **문제 4:** `products` 테이블에서 'Gizmo' 카테고리에 속하면서 평점(`rating`)이 4.5 이상인 상품의 모든 정보를 조회하세요.
 
 ```sql
-
+select *
+from products
+where category = 'Gizmo' AND rating >= 4.5;
 ```
 
 **문제 5:** `users` 테이블에서 이메일 주소(`email`)가 'yahoo.com'으로 끝나는 사용자의 이름(`name`)과 이메일(`email`)을 조회하세요.
 
 ```sql
-
+select name, email
+from users
+where email like'%@yahoo.com';
 ```
 
 **문제 6:** `orders` 테이블에서 2018년에 생성된(`created_at` 컬럼 기준) 주문 건의 모든 정보를 조회하세요.
 
 ```sql
-
+select *
+from orders
+where created_at
+between '2018-01-01' and '2018-12-24 23:59:59';
 ```
 
 **문제 7:** `products` 테이블에서 상품을 가격(`price`)이 높은 순서대로 정렬하여 상위 5개 상품의 모든 정보를 조회하세요.
 
 ```sql
-
+select *
+from products
+order by price DESC
+limit 5;
 ```
 
 **문제 8:** `users` 테이블에서 주(`state`)가 'CA', 'NY', 'TX'인 사용자들의 이름(`name`)과 주(`state`)를 조회하세요.
 
 ```sql
-
+select name, state
+from users
+where state = 'CA' or state = 'NY' or state = 'TX';
 ```
 
 **문제 9:** `products` 테이블에서 평점(`rating`)이 0인 상품의 이름(`title`)과 카테고리(`category`)를 조회하세요.
 
 ```sql
-
+SELECT title, category
+FROM products
+WHERE rating = 0
 ```
 
 **문제 10:** `products` 테이블에서 상품 이름(`title`)에 'Small'이 포함된 상품의 이름(`title`)과 가격(`price`)을 조회하세요.
 
 ```sql
-
+SELECT title, price
+FROM products
+WHERE title LIKE '%Small%';
 ```
 
 **문제 11:** `products` 테이블에서 벤더(`vendor`)가 'Senger-Stamm'인 상품의 모든 정보를 조회하세요.
 
 ```sql
-
+SELECT *
+FROM products
+WHERE vendor = 'Senger-Stamm';
 ```
 
 **문제 12:** `products` 테이블에서 상품 가격(`price`)이 20달러에서 40달러 사이인 상품의 이름(`title`)과 가격(`price`)을 조회하세요.
 
 ```sql
-
+SELECT title, price
+FROM products
+WHERE price >= 20 AND price <= 40;
 ```
 
 **문제 13:** `products` 테이블에서 'Gadget' 카테고리가 아닌 상품들 중 가격(`price`)이 100달러 이상인 상품의 모든 정보를 조회하세요.
 
 ```sql
-
+SELECT *
+FROM products
+WHERE category != 'Gadget' AND price >= 100;
 ```
 
 **문제 14:** `users` 테이블에서 도시(`city`)가 'Portland'인 사용자의 이름(`name`)과 주소(`address`)를 조회하세요.
 
 ```sql
-
+SELECT name, address
+FROM users
+WHERE city = 'Portland';
 ```
 
 **문제 15:** `users` 테이블에서 '2019-01-01' 이후에 생성된(`created_at` 컬럼 기준) 사용자들 중 가입 경로(`source`)가 'Google'인 사용자의 모든 정보를 조회하세요.
 
 ```sql
-
+SELECT *
+FROM users
+WHERE created_at >= '2019-01-01' AND source = 'Google';
 ```
 
 **문제 16:** `products` 테이블에서 상품 이름(`title`)이 'Aerodynamic'으로 시작하는 상품의 이름(`title`)과 가격(`price`)을 조회하세요.
 
 ```sql
-
+SELECT title, price
+FROM products
+WHERE title LIKE 'Aerodynamic%';
 ```
 
 **문제 17:** `reviews` 테이블에서 평점(`rating`)이 1점인 리뷰의 본문(`body`)을 조회하세요.
 
 ```sql
-
+SELECT body
+FROM reviews
+WHERE rating = 1;
 ```
 
 **문제 18:** `orders` 테이블에서 할인(`discount`)이 0보다 큰(적용된) 주문의 총 건수를 조회하세요.
 
 ```sql
-
+SELECT count(*)
+FROM orders
+WHERE discount > 0
 ```
 
 **문제 19:** `users` 테이블에서 우편번호(`zip`)가 '9'로 시작하는 사용자들의 이름(`name`)과 우편번호(`zip`)를 조회하세요.
 
 ```sql
-
+SELECT name, zip
+FROM users
+WHERE zip LIKE '9%';
 ```
 
 **문제 20:** `products` 테이블에서 상품을 카테고리(`category`)별로 오름차순 정렬하고, 같은 카테고리 내에서는 가격(`price`)이 낮은 순(오름차순)으로 정렬하여 모든 정보를 조회하세요.
 
 ```sql
-
+SELECT *
+FROM products
+ORDER BY Category ASC, price ASC;
 ```
 
 **문제 21:** `products` 테이블에서 평점(`rating`)이 4.0 이상 4.8 이하인 상품의 이름(`title`)과 평점(`rating`)을 조회하세요.
