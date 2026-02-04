@@ -51,7 +51,7 @@ where email like'%@yahoo.com';
 select *
 from orders
 where created_at
-between '2018-01-01' and '2018-12-24 23:59:59';
+between '2018-01-01' and '2018-12-31 23:59:59';
 ```
 
 **문제 7:** `products` 테이블에서 상품을 가격(`price`)이 높은 순서대로 정렬하여 상위 5개 상품의 모든 정보를 조회하세요.
@@ -170,31 +170,42 @@ ORDER BY Category ASC, price ASC;
 **문제 21:** `products` 테이블에서 평점(`rating`)이 4.0 이상 4.8 이하인 상품의 이름(`title`)과 평점(`rating`)을 조회하세요.
 
 ```sql
-
+SELECT title, rating
+FROM products
+WHERE rating BETWEEN 4.0 AND 4.8;
 ```
 
 **문제 22:** `users` 테이블에서 가입 경로(`source`)가 'Twitter' 또는 'Facebook'인 사용자의 이름(`name`)과 가입 경로(`source`)를 조회하세요.
 
 ```sql
-
+SELECT name, source
+FROM users
+WHERE source = 'Twitter' OR source = 'Facebook';
+WHERE source IN ('Twitter', 'Facebook'); # 이렇게 써도 됨
 ```
 
 **문제 23:** `products` 테이블에서 수량(`quantity`)이 5000개가 아닌 상품의 모든 정보를 조회하세요.
 
 ```sql
-
+SELECT *
+FROM products
+WHERE quantity != 5000;
 ```
 
 **문제 24:** `users` 테이블에서 주(`state`) 컬럼 값이 비어있지 않은(NULL이 아니고 빈 문자열이 아닌) 사용자의 모든 정보를 조회하세요.
 
 ```sql
-
+SELECT *
+FROM users
+WHERE state IS NOT NULL AND state != '';
 ```
 
 **문제 25:** `orders` 테이블에서 세금(`tax`)이 10달러를 초과하는 주문의 ID(`id`)와 세금(`tax`)을 조회하세요.
 
 ```sql
-
+SELECT id, tax
+FROM orders
+WHERE tax > 10;
 ```
 
 ## 2. 집계 및 그룹화 (Aggregate Functions, GROUP BY, HAVING)
@@ -202,91 +213,129 @@ ORDER BY Category ASC, price ASC;
 **문제 26:** `products` 테이블에 등록된 전체 상품의 개수는 몇 개입니까?
 
 ```sql
-
+SELECT COUNT(*)
+FROM products;
+(200개)
 ```
 
 **문제 27:** `products` 테이블에서 각 카테고리(`category`)별 상품 개수를 조회하세요.
 
 ```sql
-
+SELECT category, COUNT(*)
+FROM products
+GROUP BY category;
 ```
 
 **문제 28:** `products` 테이블에서 카테고리(`category`)별 평균 상품 가격(`price`)을 조회하되, 평균 가격이 높은 순으로 정렬하세요.
 
 ```sql
-
+SELECT category, AVG(price)
+FROM products
+GROUP BY category
+ORDER BY AVG(price) DESC ;
 ```
 
 **문제 29:** `orders` 테이블에서 모든 주문의 총 매출액(`total`의 합계)을 구하세요.
 
 ```sql
-
+SELECT SUM(total)
+FROM orders
 ```
 
 **문제 30:** `orders` 테이블에서 각 사용자(`user_id`)별로 주문한 총 횟수를 조회하세요.
 
 ```sql
-
+SELECT user_id, COUNT(*)
+FROM orders
+GROUP BY user_id;
 ```
 
 **문제 31:** `reviews` 테이블을 사용하여 각 상품(`product_id`)별 평균 평점(`rating`)을 조회하세요.
 
 ```sql
-
+SELECT product_id, AVG(rating)
+FROM reviews
+GROUP BY product_id;
 ```
 
 **문제 32:** `users` 테이블에서 각 주(`state`)별 사용자 수를 조회하되, 사용자 수가 50명 이상인 주만 출력하세요.
 
 ```sql
-
+SELECT state, count(*)
+FROM users
+GROUP BY state
+HAVING COUNT(*) >= 50;
 ```
 
 **문제 33:** `orders` 테이블에서 2019년 1월 한 달 동안 발생한 총 주문 금액(`total`의 합계)을 구하세요.
 
 ```sql
+SELECT SUM(total)
+FROM orders
+WHERE created_at BETWEEN '2019-01-01' AND '2019-01-31';
+# 이렇게 하면 31일 00시 이후의 주문은 집계가 안됨
 
+SELECT SUM(total)
+FROM orders
+WHERE created_at >= '2019-01-01' AND create_at < '2019-02-01'
 ```
 
 **문제 34:** `products` 테이블에서 가장 비싼 상품의 가격(`price`)과 가장 저렴한 상품의 가격(`price`)을 조회하세요.
 
 ```sql
-
+SELECT MAX(price), MIN(price)
+FROM products;
 ```
 
 **문제 35:** `users` 테이블에서 가입 경로(`source`)별 사용자 수를 조회하세요.
 
 ```sql
-
+SELECT source, COUNT(*)
+FROM users
+GROUP BY source;
 ```
 
 **문제 36:** `products` 테이블에서 각 카테고리(`category`)별로 가장 높은 평점(`rating`)을 조회하세요.
 
 ```sql
+SELECT category, MAX(rating)
+FROM products
+GROUP BY category;
 
 ```
 
+>>>>>>> 이거
 **문제 37:** `products` 테이블에서 벤더(`vendor`)별로 공급하는 상품의 총 개수를 조회하세요.
 
 ```sql
-
+SELECT vendor, COUNT(*)
+FROM products
+GROUP BY vendor;
 ```
 
 **문제 38:** `orders` 테이블에서 각 상품(`product_id`)별 총 판매 수량(`quantity`)의 합계를 구하세요.
 
 ```sql
-
+SELECT product_id, SUM(quantity)
+FROM orders
+GROUP BY product_id;
 ```
 
 **문제 39:** `users` 테이블에서 각 년도별로 가입한 사용자 수를 조회하세요. (`created_at` 컬럼 활용)
 
 ```sql
-
+SELECT YEAR(created_at), COUNT(*)
+FROM users
+GROUP BY YEAR(created_at);
 ```
 
 **문제 40:** `products` 테이블에서 평균 가격(`price`)이 50달러 이상인 카테고리(`category`)와 그 평균 가격을 조회하세요.
 
 ```sql
-
+SELECT category, AVG(price)
+FROM products
+GROUP BY category
+HAVING AVG(price) >= 50;
 ```
 
 **문제 41:** `reviews` 테이블에서 각 평점(`rating`, 1~5)별 리뷰 개수를 조회하세요.
