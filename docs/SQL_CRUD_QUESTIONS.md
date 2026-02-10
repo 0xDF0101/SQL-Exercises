@@ -13,31 +13,40 @@ CUD 작업은 테이블의 데이터를 변경하므로, 실습 전후에 `SELEC
 **문제 1:** `users` 테이블에서 모든 사용자의 이름(`name`)과 이메일(`email`)을 조회하세요.
 
 ```sql
-
+SELECT name, email
+FROM users;
 ```
 
 **문제 2:** `products` 테이블에서 가격(`price`)이 100달러 이상인 상품의 모든 정보를 조회하세요.
 
 ```sql
-
+SELECT *
+FROM products
+WHERE price >= 100;
 ```
 
 **문제 3:** `reviews` 테이블에서 평점(`rating`)이 5점인 리뷰의 내용(`body`)과 작성자(`reviewer`)를 조회하세요.
 
 ```sql
-
+SELECT body, reviewer
+FROM reviews
+WHERE rating = 5;
 ```
 
 **문제 4:** `orders` 테이블에서 특정 사용자(예: `user_id` = 1)의 주문 내역을 모두 조회하세요.
 
 ```sql
-
+SELECT *
+FROM orders
+WHERE user_id = 1;
 ```
 
 **문제 5:** `products` 테이블에서 각 카테고리(`category`)별 상품 개수를 조회하세요.
 
 ```sql
-
+SELECT category, COUNT(*)
+FROM products
+GROUP BY category;
 ```
 
 ---
@@ -46,7 +55,7 @@ CUD 작업은 테이블의 데이터를 변경하므로, 실습 전후에 `SELEC
 
 **문제 6:** `products` 테이블에 새로운 상품을 등록하세요.
 ```sql
-
+INSERT INTO products(category, ean, price, rating, title, vendor, created_at) VALUES ('Gadget', '1234567890123', 99.99, 5.0, 'Super Smart Watch', 'NHN Academy', NOW());
 ```
 - 카테고리: 'Gadget'
 - EAN: '1234567890123'
@@ -58,7 +67,8 @@ CUD 작업은 테이블의 데이터를 변경하므로, 실습 전후에 `SELEC
 
 **문제 7:** `users` 테이블에 새로운 사용자를 등록하세요.
 ```sql
-
+INSERT INTO users(created_at, name, email, address, city, state, password, source)
+VALUES('2023-10-01 10:00:00', '홍길동', 'gildong@nhnacademy.com', '광주광역시 동구', 'Gwangju', 'GJ', 'password123', 'Google');
 ```
 - 이름: '홍길동'
 - 이메일: 'gildong@nhnacademy.com'
@@ -71,7 +81,7 @@ CUD 작업은 테이블의 데이터를 변경하므로, 실습 전후에 `SELEC
 
 **문제 8:** `reviews` 테이블에 'Super Smart Watch'(상품 ID는 방금 등록한 ID 혹은 임의의 ID)에 대한 리뷰를 등록하세요.
 ```sql
-
+INSERT INTO reviews(product_id, rating, reviewer, body, created_at) VALUES (202, 5, '홍길동', '정말 스마트한 시계네요! 대만족입니다.', NOW());
 ```
 - 평점: 5
 - 작성자: '홍길동'
@@ -80,15 +90,20 @@ CUD 작업은 테이블의 데이터를 변경하므로, 실습 전후에 `SELEC
 
 **문제 9:** `products` 테이블에 여러 상품을 한 번에 등록하세요.
 ```sql
-
+INSERT INTO products(category, ean, price, rating, title, vendor) VALUES 
+('Widget', '9876543210987', 15.50, 4.2, 'Mini Widget', 'Widget Corp'),
+('Widget', '9876543210988', 12.00, 3.8, 'Small Widget', 'Widget Corp');
 ```
+-> bulk insert라고 함 성능도 더 좋음!
+
+
 - 상품 1: ('Widget', '9876543210987', 15.50, 4.2, 'Mini Widget', 'Widget Corp')
 - 상품 2: ('Widget', '9876543210988', 12.00, 3.8, 'Small Widget', 'Widget Corp')
 
 **문제 10:** `orders` 테이블에 홍길동 사용자가 'Super Smart Watch'를 2개 구매한 내역을 등록하세요. (필요한 컬럼: `user_id`, `product_id`, `quantity`, `subtotal`, `tax`, `total`, `created_at`)
 
 ```sql
-
+INSERT INTO orders(user_id, product_id, quantity, subtotal, tax, total, created_at) VALUES(2501, 202, 2, 99.99, 10, (99.99+10)*2, NOW());
 ```
 
 ---

@@ -672,7 +672,14 @@ WHERE r.reviewer = 'Hudson Borer';
 **문제 71:** `users` 테이블에서 'Gizmo' 카테고리 상품을 주문하지 않은 사용자의 ID(`id`)와 이름(`name`)을 조회하세요.
 
 ```sql
-
+SELECT id, name
+FROM users
+WHERE id NOT IN(
+    SELECT o.user_id
+    FROM orders o
+             JOIN products p ON o.product_id = p.id
+    WHERE p.category = 'Gizmo'
+);
 ```
 
 **문제 72:** `products` 테이블과 `orders` 테이블을 조인하여, 상품 이름(`title`)과 해당 상품을 주문한 사용자 수를 조회하세요. (주문되지 않은 상품도 0으로 표시)

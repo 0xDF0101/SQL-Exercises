@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDataSourceStorage">
+    <option name="dataSources">
+      <list>
+        <State>
+          <option name="id" value="3c8f0d0d-1165-400e-916a-ba333d11b6b7" />
+          <option name="name" value="NHNAcademyDB_100 (DDL)" />
+          <option name="dbmsName" value="MYSQL" />
+          <option name="urls">
+            <array />
+          </option>
+          <option name="outLayout" value="File per object by schema.groovy" />
+          <option name="scriptOptions">
+            <map>
+              <entry key="QualifyWithSchema" value="NEVER" />
+            </map>
+          </option>
+        </State>
+      </list>
+    </option>
+  </component>
+</project>
