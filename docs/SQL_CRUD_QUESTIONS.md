@@ -113,49 +113,65 @@ INSERT INTO orders(user_id, product_id, quantity, subtotal, tax, total, created_
 **문제 11:** `products` 테이블에서 'Super Smart Watch' 상품의 가격을 89.99로 인하하세요.
 
 ```sql
-
+UPDATE products
+SET price = 89.99
+WHERE title = 'Super Smart Watch';
 ```
 
 **문제 12:** `users` 테이블에서 '홍길동' 사용자의 주소를 '서울특별시 강남구'로, 도시를 'Seoul'로, 주를 'SL'로 변경하세요.
 
 ```sql
-
+UPDATE users
+SET address = '서울특별시 강남구', city = 'Seoul', state = 'SL'
+WHERE name = '홍길동';
 ```
 
 **문제 13:** `products` 테이블에서 'Widget' 카테고리의 모든 상품 수량(`quantity`)을 현재 수량에서 100개씩 추가하세요.
 
 ```sql
-
+UPDATE products
+SET quantity = quantity + 100
+WHERE category = 'Widget';
 ```
 
 **문제 14:** `reviews` 테이블에서 평점이 1점인 모든 리뷰의 내용을 '불만족스러운 서비스입니다.'로 일괄 수정하세요.
 
 ```sql
-
+UPDATE reviews
+SET body = '불만족스러운 서비스입니다.'
+WHERE rating = 1;
 ```
 
 **문제 15:** `orders` 테이블에서 2023년 이전에 발생한 모든 주문의 할인율(`discount`)을 0.1로 설정하세요.
 
 ```sql
-
+UPDATE orders
+SET discount = 0.1
+WHERE created_at < '2023-01-01';
 ```
 
 **문제 16:** `products` 테이블에서 평점(`rating`)이 4.0 이상인 상품들의 가격을 5% 인상하세요.
 
 ```sql
-
+UPDATE products
+SET price = price * 1.05
+WHERE rating >= 4.0;
 ```
 
 **문제 17:** `users` 테이블에서 가입 경로(`source`)가 NULL인 사용자의 가입 경로를 'Unknown'으로 변경하세요.
 
 ```sql
-
+UPDATE users
+SET source = 'Unknown'
+WHERE source IS NULL;
 ```
 
 **문제 18:** `reviews` 테이블에서 특정 상품(예: product_id = 1)에 달린 모든 리뷰의 평점을 1점씩 올리세요. (최대 5점을 넘지 않도록 처리해 보세요.)
 
 ```sql
-
+UPDATE reviews
+SET rating = LEAST(rating + 1, 5)
+WHERE product_id = 1;
 ```
 
 ---
@@ -165,13 +181,16 @@ INSERT INTO orders(user_id, product_id, quantity, subtotal, tax, total, created_
 **문제 19:** `reviews` 테이블에서 내용(`body`)이 비어 있는 리뷰를 모두 삭제하세요.
 
 ```sql
-
+DELETE FROM reviews
+WHERE body IS NULL;
 ```
 
 **문제 20:** `products` 테이블에서 등록한 지 5년이 넘은 상품 중 평점(`rating`)이 1.0 미만인 상품을 삭제하세요.
+- [] 복습하기!!!!!!!
 
 ```sql
-
+DELETE FROM products
+WHERE created_at < NOW() - INTERVAL 5 YEAR AND rating < 1.0;
 ```
 
 **문제 21:** `users` 테이블에서 '홍길동' 사용자의 계정을 삭제하세요. (주의: 외래 키 제약 조건이 있다면 관련 데이터 처리가 필요할 수 있습니다.)
