@@ -683,27 +683,50 @@ WHERE id NOT IN(
 ```
 
 **문제 72:** `products` 테이블과 `orders` 테이블을 조인하여, 상품 이름(`title`)과 해당 상품을 주문한 사용자 수를 조회하세요. (주문되지 않은 상품도 0으로 표시)
+- [ ] 복습
 
 ```sql
-
+SELECT p.title, COUNT(o.user_id)
+FROM products p 
+         LEFT JOIN orders o ON o.product_id = p.id
+GROUP BY p.title, p.id;
 ```
+- 0도 포함시켜야 하니까!
+- id도 group by에 넣어야 안전함 (상품 이름이 같아도 ID가 다를 수 있기 때문)
+
 
 **문제 73:** `users`, `orders`, `products` 테이블을 조인하여, 각 상품 카테고리(`category`)별로 주문 합계(`total`)가 가장 큰 사용자의 이름을 조회하세요.
 
+- [ ] 복습 (찬찬히 생각해보기)
 ```sql
-
+SELECT category, name
+FROM (
+         SELECT p.category, u.name, SUM(o.total),
+                RANK() OVER (PARTITION BY p.category ORDER BY SUM(o.total) DESC) as rnk
+         FROM products p
+                  JOIN orders o ON o.product_id = p.id
+                  JOIN users u ON u.id = o.user_id
+         GROUP BY p.category, u.name
+     ) t
+WHERE rnk = 1;
 ```
 
 **문제 74:** `users` 테이블과 `orders` 테이블을 조인하여, 할인율(`discount`)이 0.5 이상인 주문을 한 사용자들이 거주하는 도시(`city`) 목록을 중복 없이 조회하세요.
 
 ```sql
-
+SELECT DISTINCT u.city
+FROM users u
+         JOIN orders o ON o.user_id = u.id
+WHERE o.discount >= 0.5;
 ```
 
 **문제 75:** `products` 테이블과 `reviews` 테이블을 조인하여, 리뷰 본문(`body`)에 'love'라는 단어가 포함된 리뷰를 받은 상품의 이름(`title`)을 조회하세요.
 
 ```sql
-
+SELECT DISTINCT p.title
+FROM products p
+JOIN reviews r ON r.product_id = p.id
+WHERE r.body LIKE '%love%';
 ```
 
 ## 4. 데이터 변환 및 조건문 (CASE, DATE_FORMAT 등)
@@ -711,19 +734,30 @@ WHERE id NOT IN(
 **문제 76:** `products` 테이블에서 가격(`price`)이 100달러를 초과하면 '고가', 50달러에서 100달러 사이면 '중가', 50달러 미만이면 '저가'로 분류하여 상품 이름(`title`)과 가격, 분류(`price_range`)를 조회하세요.
 
 ```sql
-
+SELECT title, price,
+       CASE
+           WHEN price > 100 THEN '고가'
+           WHEN price >= 50 THEN '중가'
+           ELSE '저가'
+           END AS price_range
+FROM products;
 ```
 
 **문제 77:** `users` 테이블에서 이메일 주소(`email`)의 도메인(예: gmail.com, yahoo.com)만 추출하여, 각 도메인별 사용자 수를 조회하세요.
 
 ```sql
-
+SELECT SUBSTRING_INDEX(email, '@', -1) AS domain, COUNT(*)
+FROM users
+GROUP BY domain;
 ```
 
 **문제 78:** `orders` 테이블에서 주문 날짜(`created_at`)를 'YYYY-MM' 형식으로 변환하여, 월별 주문 건수를 조회하세요.
 
 ```sql
-
+SELECT DATE_FORMAT(created_at, '%Y-%m') AS month, COUNT(id)
+FROM orders
+GROUP BY month
+ORDER BY month ASC;
 ```
 
 **문제 79:** `products` 테이블에서 수량(`quantity`)이 100개 이하이면 '재고 부족', 아니면 '정상'으로 표시하여 상품 이름(`title`)과 상태를 조회하세요.
