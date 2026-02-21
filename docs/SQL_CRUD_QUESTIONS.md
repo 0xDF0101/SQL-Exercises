@@ -232,7 +232,18 @@ WHERE title LIKE '%Test%';
 
 **문제 26:** 새로운 사용자가 회원 가입을 하고, 상품을 주문하는 과정을 하나의 트랜잭션으로 처리하는 시나리오를 작성하세요.
 ```sql
+START TRANSACTION;
+INSERT INTO users(created_at, name, email, address, city, state, password, source)
+VALUES('2023-10-01 10:00:00', '김유진', 'eugene@nhnacademy.com', '광주광역시 동구', 'Gwangju', 'GJ', 'password123', 'Google');
 
+INSERT INTO orders(user_id, product_id, quantity, subtotal, tax, total, created_at)
+VALUES(LAST_INSERT_ID(), 202, 2, 99.99, 10, (99.99+10)*2, NOW());
+
+UPDATE products
+SET quantity = quantity - 1
+WHERE id = 202;
+
+COMMIT;
 ```
 1. `users` 테이블에 신규 사용자 삽입
 2. 삽입된 사용자의 ID를 사용하여 `orders` 테이블에 주문 내역 삽입
@@ -240,7 +251,9 @@ WHERE title LIKE '%Test%';
 
 **문제 27:** 재고가 부족한 상품들을 한꺼번에 재입고 처리하세요.
 ```sql
-
+UPDATE products
+SET quantity = 100
+WHERE quantity < 10;
 ```
 - 대상: `quantity`가 10개 미만인 모든 상품
 - 작업: 해당 상품들의 `quantity`를 100으로 업데이트
@@ -248,7 +261,11 @@ WHERE title LIKE '%Test%';
 **문제 28:** 특정 기간 동안 리뷰가 한 번도 작성되지 않은 상품들을 비활성화(삭제 대신 카테고리를 'Discontinued'로 변경) 처리하세요.
 
 ```sql
-
+UPDATE products p
+LEFT JOIN reviews r ON r.product_id = p.id
+SET category = 'Discontinued'
+WHERE r.id IS NULL
+  AND p.created_at < '2024-01-01';
 ```
 
 **문제 29:** 휴면 계정 처리: 최근 1년간 주문 내역이 없는 사용자의 이름을 '휴면 계정'으로, 이메일을 'N/A'로 일괄 수정하세요.
