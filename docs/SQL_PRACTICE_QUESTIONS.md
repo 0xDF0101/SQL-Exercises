@@ -763,37 +763,55 @@ ORDER BY month ASC;
 **문제 79:** `products` 테이블에서 수량(`quantity`)이 100개 이하이면 '재고 부족', 아니면 '정상'으로 표시하여 상품 이름(`title`)과 상태를 조회하세요.
 
 ```sql
-
+SELECT title,
+       CASE WHEN quantity <= 100 THEN '재고 부족'
+ELSE
+'정상'
+END AS status
+FROM products;
 ```
 
 **문제 80:** `users` 테이블의 각 사용자별로 `orders` 테이블에 주문 내역이 있으면 '구매 고객', 없으면 '일반 고객'으로 분류하여 이름(`name`)과 함께 조회하세요.
 
 ```sql
-
+SELECT DISTINCT u.name,
+       CASE
+           WHEN o.user_id IS NOT NULL THEN '구매 고객'
+            ELSE '일반 고객'
+            END AS status
+FROM users u
+LEFT JOIN orders o ON o.user_id = u.id;
 ```
 
 **문제 81:** `orders` 테이블에서 주문 합계(`total`)를 소수점 첫째 자리에서 반올림하여 주문 ID(`id`)와 함께 조회하세요.
 
 ```sql
-
+SELECT id, ROUND(total)
+FROM orders;
 ```
 
 **문제 82:** `users` 테이블에서 가입 날짜(`created_at`)의 요일별 가입자 수를 조회하세요. (MySQL의 `DAYNAME` 함수 사용)
 
 ```sql
-
+SELECT DAYNAME(created_at) AS day_of_week, COUNT(*)
+FROM users
+GROUP BY day_of_week
+ORDER BY FIELD(day_of_week, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
 ```
 
 **문제 83:** `reviews` 테이블에서 리뷰 본문(`body`)의 길이를 구하고, 본문 길이가 100자 이상인 리뷰만 조회하세요.
 
 ```sql
-
+SELECT *
+FROM reviews
+WHERE CHAR_LENGTH(body) >= 100;
 ```
 
 **문제 84:** `products` 테이블에서 상품 평점(`rating`)의 소수점 이하를 버리고 정수부만 추출하여 이름(`title`)과 함께 조회하세요. (MySQL의 `FLOOR` 함수 사용)
 
 ```sql
-
+SELECT title, FLOOR(rating)
+FROM products;
 ```
 
 **문제 85:** `users` 테이블의 이름(`name`) 컬럼 값을 첫 번째 공백을 기준으로 성(`first_name`)과 이름(`last_name`)으로 분리하여 조회하세요.
