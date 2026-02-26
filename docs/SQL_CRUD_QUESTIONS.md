@@ -271,19 +271,30 @@ WHERE r.id IS NULL
 **문제 29:** 휴면 계정 처리: 최근 1년간 주문 내역이 없는 사용자의 이름을 '휴면 계정'으로, 이메일을 'N/A'로 일괄 수정하세요.
 
 ```sql
-
+UPDATE users u
+LEFT JOIN orders o ON o.user_id = u.id
+AND o.created_at >= NOW() - INTERVAL 1 YEAR
+SET u.name = '휴면 계정', u.email = 'N/A'
+WHERE o.id IS NULL;
 ```
 
 **문제 30:** 중복 데이터 정제: 이메일이 중복된 사용자 중 가입일이 더 늦은 데이터를 삭제하세요.
 
 ```sql
-
+DELETE u1 FROM users u1
+JOIN users u2 ON u1.email = u2.email
+WHERE u1.created_at > u2.created_at;
 ```
 
 **문제 31:** 연쇄 삭제 시뮬레이션: 특정 사용자를 삭제할 때, 해당 사용자가 작성한 모든 리뷰를 먼저 삭제하는 쿼리를 작성하세요.
 
 ```sql
+START TRANSACTION;
 
+DELETE FROM reviews WHERE id = 7;
+DELETE FROM orders WHERE id =7;
+
+COMMIT;
 ```
 
 **문제 32:** 대량 가격 조정: 특정 벤더('Widget Corp')의 모든 상품 가격을 현재 가격의 10% 할인가로 수정하세요.
