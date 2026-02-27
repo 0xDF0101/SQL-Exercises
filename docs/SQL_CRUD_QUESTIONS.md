@@ -300,19 +300,38 @@ COMMIT;
 **문제 32:** 대량 가격 조정: 특정 벤더('Widget Corp')의 모든 상품 가격을 현재 가격의 10% 할인가로 수정하세요.
 
 ```sql
-
+UPDATE products
+SET price = price * 0.9
+WHERE vendor = 'Widget Corp';
 ```
 
 **문제 33:** 평점이 낮은 상품 일괄 처리: 평균 평점이 2.0 미만인 상품들을 조회하여 삭제하세요. (서브쿼리 활용)
 
 ```sql
+DELETE FROM products
+WHERE rating < 3.0;
 
+-- 이렇게도 가능하긴 한데 왜 굳이 서브쿼리를 써야하는지는 모르겠음
+DELETE FROM products
+WHERE id IN (
+    SELECT id FROM (
+                       SELECT id FROM products WHERE rating < 2.0
+                   ) AS tmp
+);
 ```
 
 **문제 34:** 조건부 데이터 이동: 'Gizmo' 카테고리의 모든 상품 정보를 가상의 `archived_products` 테이블(구조는 동일)로 복사한 후 원본 테이블에서 삭제하세요.
 
 ```sql
+START TRANSACTION;
 
+CREATE TABLE archived_products LIKE products;
+INSERT INTO archived_products
+SELECT * FROM products WHERE category = 'Gizmo';
+DELETE FROM products WHERE category = 'Gizmo';
+
+
+COMMIT;
 ```
 
 **문제 35:** 실적 기반 데이터 업데이트: 2018년에 가장 많이 주문된 상품의 카테고리를 'Best Seller'로 변경하세요.
