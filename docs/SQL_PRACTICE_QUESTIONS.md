@@ -817,7 +817,11 @@ FROM products;
 **문제 85:** `users` 테이블의 이름(`name`) 컬럼 값을 첫 번째 공백을 기준으로 성(`first_name`)과 이름(`last_name`)으로 분리하여 조회하세요.
 
 ```sql
-
+SELECT
+    name,
+    SUBSTRING_INDEX(name, ' ', 1) AS first_name,
+    SUBSTRING_INDEX(name, ' ', -1) AS last_name
+FROM users;
 ```
 
 ## 5. 종합 실습 및 심화 쿼리 (Total 100 Questions)
@@ -825,19 +829,31 @@ FROM products;
 **문제 86:** `users` 테이블과 `orders` 테이블을 조인하여, 2018년에 가장 많은 금액(`total`)을 주문한 상위 5명의 사용자 이름과 총 주문 금액을 조회하세요.
 
 ```sql
-
+SELECT name, total_amount
+FROM (SELECT u.name, SUM(o.total) AS total_amount
+      FROM users u
+               JOIN orders o ON u.id = o.user_id
+      WHERE o.created_at >= '2018-01-01' AND o.created_at < '2019-01-01'
+      GROUP BY u.name
+      ORDER BY SUM(o.total) DESC) AS m
+LIMIT 5;
 ```
 
 **문제 87:** `products` 테이블에서 각 카테고리(`category`)별로 상품 개수, 평균 가격, 최대 가격, 최소 가격을 한 번에 조회하세요.
 
 ```sql
-
+SELECT category, COUNT(*), AVG(price), MAX(price), MIN(price)
+FROM products
+GROUP BY category;
 ```
 
 **문제 88:** `products` 테이블에서 평점(`rating`)이 4.5 이상인 상품들 중, `reviews` 테이블에 리뷰가 하나도 등록되지 않은 상품의 모든 정보를 조회하세요.
 
 ```sql
-
+SELECT *
+FROM products p
+LEFT JOIN reviews r ON p.id = r.product_id
+WHERE r.id IS NULL AND p.rating >= 4.5;
 ```
 
 **문제 89:** `orders`, `users`, `products` 테이블을 조인하여, 각 주문 건에 대해 '주문 ID, 사용자 이름, 상품 이름, 주문 합계 금액(`total`)을 조회하세요.
