@@ -1,5 +1,5 @@
 -- https://docs.yugabyte.com/stable/sample-data/retail-analytics
-use nhn_academy_100;
+use server_db;
 CREATE TABLE products(
                          id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                          created_at DATETIME,

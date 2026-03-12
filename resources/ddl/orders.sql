@@ -1,4 +1,4 @@
-use nhn_academy_100;
+use server_db;
 INSERT INTO orders(id,created_at,discount,product_id,quantity,subtotal,tax,total,user_id) VALUES (1,'2019-02-11 21:40:27.892',NULL,14,2,37.648145389078365,2.07,39.718145389078366,1);
 INSERT INTO orders(id,created_at,discount,product_id,quantity,subtotal,tax,total,user_id) VALUES (2,'2018-05-15 08:04:04.580',NULL,123,3,110.93145648834248,6.1,117.0376564084763,1);
 INSERT INTO orders(id,created_at,discount,product_id,quantity,subtotal,tax,total,user_id) VALUES (3,'2019-12-06 22:22:48.544',6.416679208849759,105,2,52.723521442619514,2.9,55.62208681964182,1);

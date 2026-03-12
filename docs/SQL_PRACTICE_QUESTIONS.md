@@ -859,31 +859,58 @@ WHERE r.id IS NULL AND p.rating >= 4.5;
 **문제 89:** `orders`, `users`, `products` 테이블을 조인하여, 각 주문 건에 대해 '주문 ID, 사용자 이름, 상품 이름, 주문 합계 금액(`total`)을 조회하세요.
 
 ```sql
-
+SELECT o.id, u.name, p.title, o.total
+FROM orders o
+JOIN users u ON o.user_id = u.id
+JOIN products p ON p.id = o.product_id;
 ```
 
 **문제 90:** `orders` 테이블에서 총 주문 금액(`total`의 합계)이 가장 컸던 날짜(연-월-일)와 그날의 매출액 합계를 구하세요.
 
 ```sql
-
+SELECT DATE(created_at) AS order_date, SUM(total) AS daily_sales
+FROM orders
+GROUP BY order_date
+ORDER BY daily_sales DESC
+LIMIT 1;
 ```
 
 **문제 91:** `orders` 테이블에서 각 사용자의 주문 건 중, 해당 사용자의 평균 주문 금액보다 더 큰 금액(`total`)의 주문 내역(ID, 사용자 ID, 금액)을 조회하세요.
 
 ```sql
-
+SELECT o1.id, o1.user_id, o1.total
+FROM orders o1
+WHERE o1.total > (
+    SELECT AVG(o2.total)
+    FROM orders o2
+    WHERE o2.user_id = o1.user_id
+);
 ```
 
 **문제 92:** `users`, `orders`, `products`, `reviews` 테이블을 조인하여, 'CA' 주(`state`) 사용자들이 가장 높은 평균 평점(`rating`)을 준 상위 3개 벤더(`vendor`)의 이름과 평균 평점을 조회하세요.
 
 ```sql
-
+SELECT p.vendor, AVG(r.rating) AS avg_rating
+FROM products p
+JOIN reviews r ON r.product_id = p.id
+JOIN orders o ON o.product_id = p.id
+JOIN users u ON u.id = o.user_id
+WHERE u.state = 'CA'
+GROUP BY p.vendor
+ORDER BY avg_rating DESC
+LIMIT 3;
 ```
 
 **문제 93:** `orders` 테이블에서 2018년과 2019년의 연도별 총 매출액(`total`의 합계)을 비교하여 조회하세요.
 
 ```sql
-
+SELECT SUM(o1.total) AS 2018_total, (
+    SELECT SUM(o2.total)
+    FROM orders o2
+    WHERE created_at >= '2019-01-01' AND  created_at < '2020-01-01'
+) AS 2019_total
+FROM orders o1
+WHERE created_at >= '2018-01-01' AND  created_at < '2019-01-01';
 ```
 
 **문제 94:** `orders` 테이블과 `products` 테이블을 조인하여, 각 상품 카테고리(`category`)별 매출 비중(해당 카테고리 매출 합계 / 전체 매출 합계 * 100)을 구하세요.
