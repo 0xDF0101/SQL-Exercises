@@ -337,37 +337,70 @@ COMMIT;
 **문제 35:** 실적 기반 데이터 업데이트: 2018년에 가장 많이 주문된 상품의 카테고리를 'Best Seller'로 변경하세요.
 
 ```sql
+UPDATE products
+SET category = 'Best Seller'
+WHERE id = (
+    SELECT id FROM (
+                       SELECT p.id
+                       FROM products p
+                                JOIN orders o ON o.product_id = p.id
+                       WHERE o.created_at >= '2018-01-01' AND o.created_at < '2019-01-01'
+                       GROUP BY p.id
+                       ORDER BY COUNT(o.id) DESC
+                           LIMIT 1
+                   ) AS tmp 
+);
 
+UPDATE products p
+    JOIN (
+    SELECT product_id
+    FROM orders
+    WHERE created_at >= '2018-01-01' AND created_at < '2019-01-01'
+    GROUP BY product_id
+    ORDER BY COUNT(*) DESC
+    LIMIT 1
+    ) AS best ON p.id = best.product_id
+    SET p.category = 'Best Seller';
 ```
 
 **문제 36:** 비정상 데이터 수정: `orders` 테이블에서 `subtotal` + `tax`가 `total`과 일치하지 않는 데이터들을 찾아 `total`을 올바르게 수정하세요.
 
 ```sql
-
+UPDATE orders
+SET total = subtotal + tax
+WHERE subtotal + tax != total;
 ```
 
 **문제 37:** 사용자 가입 경로 보정: `email`이 'google.com'으로 끝나지만 `source`가 'Google'이 아닌 경우를 찾아 'Google'로 업데이트하세요.
 
 ```sql
-
+UPDATE users
+SET source = 'Google'
+WHERE email LIKE '%gmail.com' AND (source!='Google' OR source IS NULL);
 ```
 
 **문제 38:** 리뷰 블라인드 처리: 욕설이나 부적절한 단어(가상으로 'badword'라 가정)가 포함된 리뷰 본문을 '****'로 수정하세요.
 
 ```sql
-
+UPDATE reviews
+SET body = '****'
+WHERE body LIKE '%badword%';
 ```
 
 **문제 39:** 상품 상세 정보 일괄 보강: `products` 테이블의 `ean` 번호가 없는 상품들에 대해 'NO-EAN'이라는 기본값을 채워 넣으세요.
 
 ```sql
-
+UPDATE products
+SET ean = 'NO-EAN'
+WHERE ean IS NULL;
 ```
 
 **문제 40:** 주소 데이터 표준화: `state` 컬럼이 'California'인 경우를 모두 'CA'로 일괄 수정하세요.
 
 ```sql
-
+UPDATE users
+SET state='CA'
+WHERE state='California';
 ```
 
 **문제 41:** 대량 주문 사용자 등급 업그레이드: 총 주문 금액이 1000달러 이상인 사용자들의 이름 앞에 '[VIP]'를 붙이세요. (CONCAT 활용)
